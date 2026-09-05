@@ -2,7 +2,7 @@
 
 An AI-powered knowledge assistant that uses an Obsidian Markdown vault as a private knowledge base.
 
-The system uses Retrieval-Augmented Generation (RAG) to retrieve relevant information from the user's notes and generate answers using a local LLM. Answers can also be sent directly to an email address.
+The system uses Retrieval-Augmented Generation (RAG) to retrieve relevant information from the user's notes and generate grounded answers using Qwen3.6 27B through the Groq API. Answers can also be sent directly to an email address.
 
 ## Features
 
@@ -13,13 +13,12 @@ The system uses Retrieval-Augmented Generation (RAG) to retrieve relevant inform
 - Store embeddings in ChromaDB
 - Semantic search over notes
 - RAG-based question answering
-- Local Qwen3 LLM using Ollama
+- Qwen3.6 27B through Groq API
 - Source citations for retrieved notes
 - Email answers using Gmail SMTP
 - Streamlit web interface
 
 ## Architecture
-
 
 ```text
 Obsidian Vault (.md)
@@ -36,7 +35,7 @@ Query Embedding
         ↓
 Semantic Retrieval
         ↓
-Qwen3 RAG Generation
+Qwen3.6 27B via Groq API
         ↓
 Answer + Sources
         ↓
@@ -59,6 +58,7 @@ obsidian-rag/
 ├── generator.py
 ├── vault_manager.py
 ├── email_sender.py
+├── requirements.txt
 │
 ├── vault/
 │   ├── Machine Learning.md
@@ -71,23 +71,14 @@ obsidian-rag/
 ```
 ## How RAG Works
 1. Markdown files are loaded from the Obsidian vault.
-
 2. Notes are divided into hierarchical chunks based on Markdown headings.
-
-3. Each chunk is converted into a vector embedding.
-
+3. Each chunk is converted into a vector embedding using all-MiniLM-L6-v2.
 4. Embeddings are stored in ChromaDB.
-
 5. When a user asks a question, the question is converted into an embedding.
-
-6. ChromaDB retrieves the most relevant note chunks.
-
-7. The retrieved context is provided to the Qwen3 local LLM.
-
-8. The LLM generates an answer using only the retrieved information.
-
-9. The application displays the answer along with its source notes.
-
+6. ChromaDB retrieves the most relevant note chunks using semantic similarity.
+7. The retrieved context is provided to Qwen3.6 27B through the Groq API.
+8. The model generates an answer using only the retrieved information.
+9. The application displays the answer along with the source note and section.
 10. The answer can optionally be sent by email.
 
 ## Requirements
@@ -95,8 +86,7 @@ obsidian-rag/
 Before running the application, make sure you have:
 
 - Python 3.12
-- Ollama
-- Qwen3 1.7B model
+- Groq API key
 - An Obsidian vault containing Markdown (`.md`) notes
 - Gmail account with 2-Step Verification and an App Password (only if using email functionality)
 
@@ -116,24 +106,29 @@ my-vault.zip
 
 Clone the repository:
 
-git clone <your-github-repository-url>
+git clone https://github.com/safasoudagar/Obsidian-Vault-Knowledge-Base-RAG-Email-Sender.git
 
 Navigate to the project:
 
-cd obsidian-rag
+cd Obsidian-Vault-Knowledge-Base-RAG-Email-Sender
 
 Create and activate the Conda environment:
 
 conda create -n obsidian-rag python=3.12
 conda activate obsidian-rag
 
-Install dependencies:
+Install the required dependencies:
 
-pip install streamlit sentence-transformers chromadb python-dotenv ollama
+pip install -r requirements.txt
+API Configuration
 
-Download the Qwen3 model:
+Create a .env file in the project root:
 
-ollama pull qwen3:1.7b
+GROQ_API_KEY=your_groq_api_key
+
+The application uses the Groq API for Qwen3.6 27B answer generation.
+
+
 
 ## Email Configuration
 
@@ -212,16 +207,28 @@ The email contains:
 | Sentence Transformers | Text embeddings |
 | all-MiniLM-L6-v2 | Embedding model |
 | ChromaDB | Vector database |
-| Ollama | Local LLM runtime |
+| Groq API | Hosted LLM inference |
 | Qwen3 1.7B | RAG answer generation |
 | Gmail SMTP | Email delivery |
 
 ## Important Notes
 
-- The application currently runs the Qwen3 model locally through Ollama.
-- Answer generation may take a few seconds. Please be patient and wait for the response to finish generating.
-- The uploaded vault must be provided as a ZIP file.
-- The vault should contain Markdown (`.md`) files.
-- `.env` contains sensitive email credentials and must not be committed.
-- The application ignores the `.obsidian` directory when processing vault files.
+* The application uses **Qwen3.6 27B** through the **Groq API** for answer generation.
+* A valid **Groq API key** is required for RAG answer generation.
+* Groq API usage is subject to the applicable API rate limits.
+* Answer generation may take a few seconds.
+* The uploaded vault must be provided as a **ZIP file**.
+* The vault should contain **Markdown (`.md`) files**.
+* Nested folders inside the vault are supported.
+* The `.obsidian` directory is ignored when processing vault files.
+* `.env` contains sensitive credentials and must not be committed.
+* **ChromaDB** stores the generated vector index locally for the current application environment.
+
+## Security
+
+* API keys and email credentials are stored in **environment variables**.
+* `.env` is excluded from Git using `.gitignore`.
+* Sensitive credentials must **never** be uploaded to GitHub.
+* **Gmail App Passwords** should be used instead of regular Gmail passwords.
+
 
