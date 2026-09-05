@@ -4,6 +4,10 @@ An AI-powered knowledge assistant that uses an Obsidian Markdown vault as a priv
 
 The system uses Retrieval-Augmented Generation (RAG) to retrieve relevant information from the user's notes and generate grounded answers using Qwen3.6 27B through the Groq API. Answers can also be sent directly to an email address.
 
+## Live Demo
+
+https://obsidian-vault-knowledge-base-rag-email-sender-egfgfdqynexwgc.streamlit.app
+
 ## Features
 
 - Upload an Obsidian vault as a ZIP file
@@ -208,7 +212,7 @@ The email contains:
 | all-MiniLM-L6-v2 | Embedding model |
 | ChromaDB | Vector database |
 | Groq API | Hosted LLM inference |
-| Qwen3 1.7B | RAG answer generation |
+| Qwen3.6 27B | RAG answer generation |
 | Gmail SMTP | Email delivery |
 
 ## Important Notes
