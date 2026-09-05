@@ -62,6 +62,7 @@ Answer:
         ],
         temperature=0.2,
         max_completion_tokens=300,
+        reasoning_effort="none",
         reasoning_format="hidden",
     )
 
