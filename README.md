@@ -20,6 +20,8 @@ The system uses Retrieval-Augmented Generation (RAG) to retrieve relevant inform
 
 ## Architecture
 
+
+```text
 Obsidian Vault (.md)
         ↓
 Markdown Ingestion
@@ -40,8 +42,12 @@ Answer + Sources
         ↓
 Optional Email
 
+```
 
 ## Project Structure
+
+```text
+
 obsidian-rag/
 │
 ├── app.py
@@ -62,17 +68,27 @@ obsidian-rag/
 ├── .gitignore
 └── README.md
 
+```
 ## How RAG Works
-1.Markdown files are loaded from the Obsidian vault.
-2.Notes are divided into hierarchical chunks based on Markdown headings.
-3.Each chunk is converted into a vector embedding.
-4.Embeddings are stored in ChromaDB.
-5.When a user asks a question, the question is converted into an embedding.
-6.ChromaDB retrieves the most relevant note chunks.
-7.The retrieved context is provided to the Qwen3 local LLM.
-8.The LLM generates an answer using only the retrieved information.
-9.The application displays the answer along with its source notes.
-10.The answer can optionally be sent by email.
+1. Markdown files are loaded from the Obsidian vault.
+
+2. Notes are divided into hierarchical chunks based on Markdown headings.
+
+3. Each chunk is converted into a vector embedding.
+
+4. Embeddings are stored in ChromaDB.
+
+5. When a user asks a question, the question is converted into an embedding.
+
+6. ChromaDB retrieves the most relevant note chunks.
+
+7. The retrieved context is provided to the Qwen3 local LLM.
+
+8. The LLM generates an answer using only the retrieved information.
+
+9. The application displays the answer along with its source notes.
+
+10. The answer can optionally be sent by email.
 
 ## Requirements
 
@@ -89,13 +105,13 @@ The uploaded Obsidian vault must be provided as a `.zip` file.
 The vault should contain Markdown (`.md`) files.
 
 Example:
-
+```text
 my-vault.zip
 └── My Obsidian Vault/
     ├── Machine Learning.md
     ├── Python.md
     └── Computer Networks.md
-
+```
 ## Installation
 
 Clone the repository:
