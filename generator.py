@@ -1,4 +1,10 @@
-import ollama
+import os
+from dotenv import load_dotenv
+from groq import Groq
+
+load_dotenv()
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 
 def generate_answer(question, retrieved_chunks):
@@ -46,15 +52,17 @@ Question:
 Answer:
 """
 
-    response = ollama.chat(
-        model="qwen3:1.7b",
+    response = client.chat.completions.create(
+        model="qwen/qwen3.6-27b",
         messages=[
             {
                 "role": "user",
                 "content": prompt
             }
         ],
-        think=False
+        temperature=0.2,
+        max_completion_tokens=300,
+        reasoning_format="hidden",
     )
 
-    return response["message"]["content"]
+    return response.choices[0].message.content
